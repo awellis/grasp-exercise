@@ -11,6 +11,9 @@ venv/
 env/
 .venv/
 
+# Lua
+*.luarc*
+
 # VSCode
 *.code-workspace
 
