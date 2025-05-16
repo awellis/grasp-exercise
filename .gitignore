@@ -13,3 +13,7 @@ env/
 
 # VSCode
 *.code-workspace
+
+# Quarto
+static/
+sample_exercise*
