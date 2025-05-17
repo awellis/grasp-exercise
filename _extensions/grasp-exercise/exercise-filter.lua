@@ -1,5 +1,6 @@
 -- exercise-filter.lua
--- Simplified Quarto filter to extract exercise data and generate JSON
+-- GRASP Exercise Filter with Support for Nested Div Structure
+-- Processes hierarchical structure where steps are nested within checkpoints
 
 -- Global variables to store exercise data
 local exercise_data = {
@@ -10,7 +11,6 @@ local exercise_data = {
 }
 
 local current_checkpoint = nil
-local current_step = nil
 
 function Meta(meta)
   -- Extract metadata from YAML header
@@ -34,10 +34,9 @@ function Meta(meta)
 end
 
 function Div(div)
-  -- Handle different div classes for exercise components
   local classes = div.classes
   
-  -- Check if div has the class we're looking for
+  -- Helper function to check if div has a specific class
   local function hasClass(className)
     for _, class in ipairs(classes) do
       if class == className then
@@ -47,54 +46,102 @@ function Div(div)
     return false
   end
   
+  -- Process checkpoint divs
   if hasClass("checkpoint") then
-    -- Start a new checkpoint
     local checkpoint_num = div.attributes["number"] or tostring(#exercise_data.checkpoints + 1)
     current_checkpoint = {
       checkpoint_number = tonumber(checkpoint_num),
+      title = "",
       main_question = "",
       main_answer = "",
       image_solution = div.attributes["image"] or "",
       steps = {}
     }
+    
+    -- Add to exercise data
     table.insert(exercise_data.checkpoints, current_checkpoint)
-    current_step = nil
     
-  elseif hasClass("main-question") then
-    if current_checkpoint then
-      current_checkpoint.main_question = pandoc.utils.stringify(div.content)
-    end
+    -- Process the nested content within the checkpoint
+    processCheckpointContent(div.content, current_checkpoint)
     
-  elseif hasClass("main-answer") then
-    if current_checkpoint then
-      current_checkpoint.main_answer = pandoc.utils.stringify(div.content)
-    end
-    
-  elseif hasClass("step") then
-    -- Start a new step within current checkpoint
-    if current_checkpoint then
-      local step_num = div.attributes["number"] or tostring(#current_checkpoint.steps + 1)
-      current_step = {
-        step_number = tonumber(step_num),
-        guiding_question = "",
-        guiding_answer = "",
-        image = div.attributes["image"] or ""
-      }
-      table.insert(current_checkpoint.steps, current_step)
-    end
-    
-  elseif hasClass("guiding-question") then
-    if current_step then
-      current_step.guiding_question = pandoc.utils.stringify(div.content)
-    end
-    
-  elseif hasClass("guiding-answer") then
-    if current_step then
-      current_step.guiding_answer = pandoc.utils.stringify(div.content)
-    end
+    return div
+  end
+  
+  -- For backward compatibility, handle flat structure as well
+  -- (when divs are not nested inside checkpoints)
+  if not current_checkpoint then
+    return div
   end
   
   return div
+end
+
+function processCheckpointContent(content, checkpoint)
+  local current_step = nil
+  
+  for _, block in ipairs(content) do
+    if block.tag == "Div" then
+      local classes = block.classes
+      
+      local function hasClass(className)
+        for _, class in ipairs(classes) do
+          if class == className then
+            return true
+          end
+        end
+        return false
+      end
+      
+      if hasClass("main-question") then
+        checkpoint.main_question = pandoc.utils.stringify(block.content)
+        
+      elseif hasClass("main-answer") then
+        checkpoint.main_answer = pandoc.utils.stringify(block.content)
+        
+      elseif hasClass("step") then
+        local step_num = block.attributes["number"] or tostring(#checkpoint.steps + 1)
+        current_step = {
+          step_number = tonumber(step_num),
+          guiding_question = "",
+          guiding_answer = "",
+          image = block.attributes["image"] or ""
+        }
+        table.insert(checkpoint.steps, current_step)
+        
+        -- Process nested step content
+        processStepContent(block.content, current_step)
+      end
+      
+    elseif block.tag == "Header" then
+      -- Extract title from header within checkpoint
+      if block.level >= 3 then
+        checkpoint.title = pandoc.utils.stringify(block.content)
+      end
+    end
+  end
+end
+
+function processStepContent(content, step)
+  for _, block in ipairs(content) do
+    if block.tag == "Div" then
+      local classes = block.classes
+      
+      local function hasClass(className)
+        for _, class in ipairs(classes) do
+          if class == className then
+            return true
+          end
+        end
+        return false
+      end
+      
+      if hasClass("guiding-question") then
+        step.guiding_question = pandoc.utils.stringify(block.content)
+      elseif hasClass("guiding-answer") then
+        step.guiding_answer = pandoc.utils.stringify(block.content)
+      end
+    end
+  end
 end
 
 -- Simple function to convert Lua table to YAML format
@@ -145,8 +192,11 @@ end
 
 function format_yaml_value(value)
   if type(value) == "string" then
-    -- Escape quotes and handle multiline
-    if string.find(value, "[:\n\"']") then
+    -- Handle multiline strings
+    if string.find(value, "\n") then
+      return "|\n" .. string.gsub(value, "([^\n]+)", "  %1")
+    -- Escape special characters
+    elseif string.find(value, "[:\n\"'%[%]{}|>]") then
       return "\"" .. string.gsub(value, "\"", "\\\"") .. "\""
     else
       return value
@@ -170,7 +220,7 @@ function Pandoc(doc)
     print("✅ Generated exercise-output.json")
   end
   
-  -- Write YAML file using our simple converter
+  -- Write YAML file using our custom converter
   local yaml_str = to_yaml(exercise_data)
   local yaml_file = io.open("exercise-output.yaml", "w")
   if yaml_file then
