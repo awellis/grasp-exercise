@@ -1,0 +1,184 @@
+---
+title: "GRASP Exercise Template"
+format: html
+filters:
+  - grasp-exercise
+exercise:
+  title: "Your Exercise Title"
+  topic: "Subject Area"
+  level: "beginner|intermediate|advanced"
+  language: "en"
+  author: "Your Name"
+  tags: ["tag1", "tag2", "tag3"]
+  version: "1.0"
+  first_message: "Welcome message that introduces the exercise and sets expectations."
+  end_message: "Congratulations message that summarizes what was learned."
+---
+
+# Exercise Title
+
+Brief introduction to the exercise topic and learning objectives.
+
+::: {.checkpoint number="1" image="static/checkpoint1_summary.png"}
+
+### Checkpoint 1: Main Learning Objective Title
+
+::: {.main-question}
+Pose the primary question or challenge for this checkpoint. This should be something students can answer after completing all the steps within this checkpoint.
+
+Example: "Based on the data visualization above, what can you conclude about the relationship between variables X and Y?"
+:::
+
+::: {.main-answer}
+Provide a comprehensive answer to the main question. This should synthesize the learning from all steps in the checkpoint.
+
+**Key points:**
+- Point 1 with explanation
+- Point 2 with reasoning
+- Point 3 with implications
+
+**Conclusion:** Summarize the main insight or learning outcome.
+:::
+
+  ::: {.step number="1" image="static/step1_1.png"}
+  
+  ::: {.guiding-question}
+  What fundamental concept should students understand first?
+  :::
+  
+  ::: {.guiding-answer}
+  Explain the fundamental concept clearly and concisely. Connect it to prior knowledge and preview how it relates to the overall checkpoint objective.
+  
+  **Key takeaway:** One-sentence summary of this step's learning.
+  :::
+  
+  :::
+  
+  ::: {.step number="2" image="static/step1_2.png"}
+  
+  ::: {.guiding-question}
+  How does this concept apply in practice?
+  :::
+  
+  ::: {.guiding-answer}
+  Provide practical examples or applications. Show step-by-step reasoning or calculation if appropriate.
+  
+  **Example:**
+  - Demonstrate with concrete data
+  - Show the process
+  - Highlight common pitfalls
+  :::
+  
+  :::
+  
+  ::: {.step number="3" image="static/step1_3.png"}
+  
+  ::: {.guiding-question}
+  What are the assumptions or limitations to consider?
+  :::
+  
+  ::: {.guiding-answer}
+  Discuss important assumptions, limitations, or conditions that affect the application of this concept.
+  
+  **Important considerations:**
+  1. Assumption/limitation 1
+  2. Assumption/limitation 2  
+  3. When this approach works best
+  :::
+  
+  :::
+
+:::
+
+::: {.checkpoint number="2" image="static/checkpoint2_summary.png"}
+
+### Checkpoint 2: Advanced Application
+
+::: {.main-question}
+Present a more complex scenario that builds on Checkpoint 1. This should require students to integrate and apply their learning.
+
+Example: "Now that you understand the basic concept, how would you handle this more complex situation where [describe scenario]?"
+:::
+
+::: {.main-answer}
+Provide a thorough analysis of the complex scenario. Show how the concepts from Checkpoint 1 are applied in this new context.
+
+**Analysis:**
+- Break down the problem components
+- Apply learned concepts systematically  
+- Consider multiple perspectives or approaches
+
+**Implications:** Discuss broader implications or connections to real-world applications.
+:::
+
+  ::: {.step number="1" image="static/step2_1.png"}
+  
+  ::: {.guiding-question}
+  How do you adapt the basic approach for this new scenario?
+  :::
+  
+  ::: {.guiding-answer}
+  Guide students through the adaptation process. Show what changes and what stays the same.
+  
+  **Adaptation steps:**
+  1. Identify what's different
+  2. Modify the approach accordingly
+  3. Validate the adapted solution
+  :::
+  
+  :::
+  
+  ::: {.step number="2" image="static/step2_2.png"}
+  
+  ::: {.guiding-question}
+  What additional considerations arise in complex scenarios?
+  :::
+  
+  ::: {.guiding-answer}
+  Discuss advanced considerations, trade-offs, or optimization strategies that become relevant in complex applications.
+  
+  **Advanced considerations:**
+  - Factor 1 and its impact
+  - Factor 2 and how to address it
+  - Best practices for complex cases
+  :::
+  
+  :::
+
+:::
+
+## Summary and Synthesis
+
+Provide a brief summary that ties together the learning from all checkpoints. Emphasize key insights and practical applications.
+
+### What You've Learned
+- Main concept from Checkpoint 1
+- Advanced application from Checkpoint 2
+- Integration of concepts
+
+### Next Steps
+Suggest how students can continue their learning or apply these concepts in their work.
+
+---
+
+## Template Guidelines
+
+### Writing Effective Questions
+- **Main Questions**: Should be answerable after completing all steps in a checkpoint
+- **Guiding Questions**: Should build toward understanding the main question
+- **Progressive Difficulty**: Start simple, build complexity gradually
+
+### Structuring Answers
+- **Concise but Complete**: Provide enough detail without overwhelming
+- **Use Formatting**: Bold key points, use bullets for clarity
+- **Include Examples**: Concrete examples help solidify understanding
+
+### Image Integration
+- **Relevant Visuals**: Include images that directly support the learning
+- **Consistent Naming**: Use clear, systematic naming for image files
+- **Accessible Alt Text**: Ensure images enhance rather than rely on visual-only information
+
+### Content Organization
+1. **One Concept per Step**: Each step should focus on a single learning point
+2. **Logical Progression**: Steps should build naturally toward the checkpoint goal
+3. **Clear Hierarchy**: Use the nested structure to show relationships between concepts
