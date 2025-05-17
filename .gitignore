@@ -20,3 +20,5 @@ env/
 # Quarto
 static/
 sample_exercise*
+sample-exercise*
+/.luarc.json
